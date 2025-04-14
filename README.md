@@ -1,1 +1,1 @@
-# ecc_intro
+# Introduction to Elliptic Curve Cryptography
