@@ -91,4 +91,55 @@ Some notes about the Domain Parameters:
 There are other complicated requirements on the Domain Parameters (including choosing the right values `a` and `b` for the curve!) that counter certain attacks against `ECC`, but we won't be talking about them (mostly because I am not familir with all of them!) - the important take is that you should only use Domain Parameters that are believed to be safe.  
 With that in mind, I'd like to talk about certain attacks on `ECC`:
 
-### 
+### Side-channel attacks
+Practically all `ECC` implementations require scalar multiplication - calculating `nP` for a point `P`.  
+If done naively, measuring the time or power consumption could be a great target for a [Side-channel-attack](https://en.wikipedia.org/wiki/Side-channel_attack).  
+When I say "naive implementation" I do not mean iteratively adding a point to itself `n` times - that would take too much time if `n` is a `256`-bit integer!  
+Rather than that, assuming the primitive we'll call `double_point` which calculates `P --> 2P`, we can look at the binary representation of `n` and use its bits.  
+For example, if `n` is `13` (I chose a small number just for demonstration purposes!), then `n` is `1101` in binary, or, in other words: $13 = 2^3 + 2^2 + 2^0$.  
+We multiply points again and again based on the binary position of the power of 2: `13P = 2*2*2*P + 2*2*P + P`.  
+So a naive implementation of scalar multiplication might look like this:
+
+```python
+def scalar_mult(P, n):
+    """
+        Naively calculates nP - do not use this in a real implementation.
+    """
+
+    Q = INFINITY_POINT      # Assuming a point at infinity is saved in a constant
+
+    # Iterate powers of 2
+    pw = 0
+    while n > 0:
+        if n & 1:
+            tmp = P
+            for i in range(pw):
+                tmp = double_point(tmp)
+            Q += P
+
+    return Q
+```
+
+In the case of `ECDH` we have described earlier, if it takes `10` miliseconds for `Alice` to run `double_point`, and it took her `50` miliseconds in total, then we can conclude she had to double points around `50/10 = 5` times. This reveals a lot about `n` and might even allow an attacker to cleverly perform a bruteforce attack on `n` - not good!  
+There are several ways to combat that, the most known one is known as a *Montgomery Ladder* and is just simple and elegant:
+
+```python
+def scalar_mult(P, n):
+    """
+        Montgomery ladder - naive approach.
+    """
+
+    R0 = INFINITY_POINT
+    R1 = P
+
+    # Working from MSB to LSB
+    for bit in range(256, -1, -1):
+        if n & (1 << (bit)):    # If that bit is set
+            R0 += R1
+            R1 = double_point(R1)
+        else:                  # If that bit if not set
+            R1 += R0
+            R0 = double_point(R0)
+```
+
+This implementation does scalation multiplication in a constant time (assuming `double_point` and general point addition do not reveal information about the points involved).
