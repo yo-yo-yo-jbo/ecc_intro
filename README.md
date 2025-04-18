@@ -116,7 +116,8 @@ def scalar_mult(P, n):
             for i in range(pw):
                 tmp = double_point(tmp)
             Q += P
-
+        pw += 1
+        n >>= 1
     return Q
 ```
 
