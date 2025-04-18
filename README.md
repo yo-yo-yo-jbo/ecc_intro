@@ -42,9 +42,28 @@ Let us define those, and the entire Group!
 - Because the curve is smooth ($\Delta\neq0$) each point has a tangent, and it crosses the line in exactly one more point, besides points that have `y=0` that create a perfectly vertical tangent, so besides those annoying points (there could be one or three of them), we already have `P+P` defined.
 - If `P = (x, y)` it feels natural to define `-P = (x, -y)`. Connecting those two points with a line gets us nowhere... So let's define one more element in the Group! Geometrically, we won't see it, but we refer to is as *the point at Infinity* and mark it as $\mathcal{O}$. That will be our *identity element*.
 - For 3 points `P`, `Q`, `R` on the same line, we define `P+Q+R` as $\mathcal{O}$, or, in other words: `P+Q = -R`. Geometrically, it means that we stretch a line between `P` and `Q`, get the third point and then take a the point "mirrored" as the result.
+- Points that have a `y` coordinate of `0` (as I mentined, there could be one or three of them) are the inverse of themselves, so for those points `P = -P`, which also tells you `P+P` is just $\mathcal{O}$.
 
-Here is how point addition looks like in a picture (again courtesy of [desmos.com](https://www.desmos.com)):
+Here is how point addition looks like geometrically (again courtesy of [desmos.com](https://www.desmos.com)):
 
 ![Elliptic Curve plot](ecc_addition.png)
 
-The "big" orange and blue dots represent the points `P` and `Q`, and the small *blue* point represents `P+Q`.
+The "big" orange and blue dots represent the points `P` and `Q`, and the small *blue* point represents `P+Q`.  
+Note how the Group we defined is also *Abelian* (as well as passes all requirements to be a mathematical Group).
+
+### Using Elliptic Curves for cryptography
+So, we built a group - that's nice and all, but how is it practical?  
+For cryptography and computers in general, we are usually interested in *countable* numbers. I won't go into the details about what that means exactly, but in our case I'd say we simply have too many points (currently - [real numbers](https://en.wikipedia.org/wiki/Real_number)).  
+Additionally, just like we saw in my [Diffie-Hellman blogpost](https://github.com/yo-yo-yo-jbo/dh_key_exchange/), things get interesting when you work `mod` some number (we used a prime in Diffie-Hellman).  
+In `ECC`, we will either use a prime number or a large power of 2, but let's stick with primes for now. Thus, we will work with all integer numbers satisfying:
+
+$y^2=x^3+ax+b (mod p)$
+
+What different does it make?  
+First of all, the number of points is finite, but most importantly - addition is done `mod p`, and therefore looks unpredictable, just like raising a number to large powers `mod p` looked unpredictable in Diffie-Hellman.  
+Let's continue discussing the addition of a point to itself - we have defined `P+P`, and we can do that over and over and get new points.  
+Our mathematical notation will be `P+P = 2P` and generally we could get `P+P+P+...+P = nP`. We call these *coefficient multiplication* or *scalar multiplication* of a point.  
+Interestingly, that scalar multiplication is what we call a *trapdoor function* - it's relatively easy to calculate but hard to invert, and behaves very much like the [Discrete Logarithm](https://en.wikipedia.org/wiki/Discrete_logarithm) I mentioned in my [Diffie-Hellman key exchange blogpost](https://github.com/yo-yo-yo-jbo/dh_key_exchange/).  
+Formally, if we have a *base point* marked as `P` and a very large positive integer `n`, it's hard to get `n` from the points `P` and `nP`.  
+In a sense, you could think of the pair `(P, nP)` as a *public key* and `n` as a *private key*.
+
