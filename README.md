@@ -161,3 +161,30 @@ That vulnerability had a deep impact on Microsoft and the world in general, but 
 What an impactful vulnerability!
 
 ### The case of Dual_EC_DRBG
+If the CurveBall case showed the NSA responsibly dislosing a vulnerability, the case of [Dual_EC_DRBG](https://en.wikipedia.org/wiki/Dual_EC_DRBG) is the opposite - it's an *introduction* of a mathematical backdoor.  
+As we have seen, secure random number generation is essential to many cryptographic applications.  
+Well, in 2006, a new [Crypgoraphically Secure Pseudo-Random Number Generator (CSPRNG)](https://en.wikipedia.org/wiki/Cryptographically_secure_pseudorandom_number_generator) known as *Dual_EC_DRBG* was proposed to be standarized.  
+As we mentioned before, point multiplication on an Elliptic Curve in a finite field is "unexpected", so it makes sense to use Elliptic Curves for pseudo-random number generation. Let's see how the proposal looked like mathematically.  
+The algorithm has the following parameters:
+- An Elliptic Curve `E` over a finite field
+- A base point `P` with a large order `n`.
+- Another point on the curve `Q`.
+
+Given a secret internal state `s`, the algorithm iterates as such:
+- The next value of `s` is the `x` coordinate of `sP`.
+- The output `r` of the iteration is the truncated `x` coordinate of `sQ`.
+
+Immidiately, the implementation drew attention. Firstly, it's not clear why truncation is necessary - introducing more randomness to a *CSPRNG* is a desired thing. More importantly though, the relation between points `Q` and `P` was unclear.  
+Let's assume someone malevolent proposed some two points `Q` and `P`, but in secret built them as such: `Q = dP` for some *secret* scalar `d` that only they knew.  
+This compromises the security of the entire system!  
+Given the output `r` at some iteration, assuming the truncation wasn't too aggressive, one could brute-force possible `x` coodinates, getting candidates of `sQ`.  Then, one might recover the output `r` at that iteration by calculating: $d^{-1}(sQ) = d^{-1}(sdP) = sP$, thus concluding the next secret state of `s`!  
+Note that once one knows `s`, all future pseudo-random values can be determined, thus, the entire *CSPRNG* is compromised - neat, and scary!  
+Luckily, `Dual_EC_DRBG` is not used anywhere these days (I hope!), but it's important to always doubt the Domain Parameters of curves.
+
+## Summary
+In this blogpost, we have introduced a lot of math, cryptography and even mentioned attacks and vulnerabilities related to `ECC`.  
+There are entire books and very deep theory about Elliptic Curves, most of whih I am not familiar with, but I hope this blogpost gave a nice taste of `ECC`, its usefulness and some of its pitfalls.
+
+Stay tuned!
+
+Jonathan Bar Or
