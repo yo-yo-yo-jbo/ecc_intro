@@ -47,3 +47,4 @@ Here is how point addition looks like in a picture (again courtesy of [desmos.co
 
 ![Elliptic Curve plot](ecc_addition.png)
 
+The "big" orange and blue dots represent the points `P` and `Q`, and the small *blue* point represents `P+Q`.
