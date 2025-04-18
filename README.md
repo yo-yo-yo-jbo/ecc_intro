@@ -82,4 +82,13 @@ Let's assume `Alice` and `Bob` agree on the curve, the prime `p` and a base poin
 That is the [Elliptic Curve Diffie-Hellman (ECDH)](https://en.wikipedia.org/wiki/Elliptic-curve_Diffie–Hellman) key exchange algorithm, but there are other algorithms that rely on the same scalar multiplication reversal problem, most notably is the [Elliptive Curve Digital Signature Algorithm (ECDSA)](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) that I might be covering some other time.
 
 ## Potential attacks on Elliptic Curve Cryptography
-The summary so far might think every curve and point are good - but just like in RSA or Diffie-Hellman, choosing bad parameters can cause substantial weaknesses to the entire cipher.
+The summary so far might think every curve and point are good - but just like in RSA or Diffie-Hellman, choosing bad parameters can cause substantial weaknesses to the entire cipher.  
+The parameters chosen for `ECC` are known as *Domain Parameters*, and similarly to the "vanilla" Diffie-Hellman, are standarized.  
+Some notes about the Domain Parameters:
+- We work in a finite field with a size that is typially a large prime `p` or a large power of `2`.
+- We define a special base point for a given curve and note it as `G`, which is the *generator* of a subgroup of points in the curve, similarly to what we had in Diffie-Hellman. That `G` has to have an *order* of a large number (that order is the smallest number `k` such that `kG` is $\mathcal{O}$), and usually a prime.
+
+There are other complicated requirements on the Domain Parameters (including choosing the right values `a` and `b` for the curve!) that counter certain attacks against `ECC`, but we won't be talking about them (mostly because I am not familir with all of them!) - the important take is that you should only use Domain Parameters that are believed to be safe.  
+With that in mind, I'd like to talk about certain attacks on `ECC`:
+
+### 
