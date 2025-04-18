@@ -67,3 +67,12 @@ Interestingly, that scalar multiplication is what we call a *trapdoor function* 
 Formally, if we have a *base point* marked as `P` and a very large positive integer `n`, it's hard to get `n` from the points `P` and `nP`.  
 In a sense, you could think of the pair `(P, nP)` as a *public key* and `n` as a *private key*.
 
+### Elliptic Curve Diffie-Hellman
+Similarly to [Diffie-Hellman key exchange protocol](https://github.com/yo-yo-yo-jbo/dh_key_exchange/), we an define a similar protocol over the Group we have defined.  
+Let's assume `Alice` and `Bob` agree on the curve, the prime `p` and a base point `P`. Then:
+1. `Alice` chooses a random large number `a` and sends `Bob` the point `aP`.
+2. `Bob` chooses a random large number `b` and sends `Alice` the point `bP`.
+3. `Alice` gets `Bob`'s point and multiplies it with her `a` scalar, getting `a(bP) = abP`.
+4. Similarly, `Bob` gets `Alice`'s point and multiplies it with his `b` scalar, getting `b(aP) = abP`.
+5. Now `Alice` and `Bob` have exchanged a secret `abP` - for example, they could use the `x` coordinate of that `abP` point.
+6. Note an evesdropper is not capable of concluding `a` from `aP` or `b` from `bP`.
