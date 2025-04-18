@@ -15,7 +15,7 @@ To ensure that the curve is smooth (i.e., it has no cusps or self-intersections)
 $\Delta=−16(4a^3+27b^2)\neq0$
 
 This condition ensures that the curve forms a well-behaved shape suitable for defining arithmetic.  
-Here’s what an elliptic curve looks like when plotted over the real numbers with `a = -1` and `b = 2`:  
+Here’s what an elliptic curve looks like when plotted over the real numbers with `a = -1` and `b = 2` (courtesy of [desmos.com](https://www.desmos.com)):  
 
 ![Elliptic Curve plot](ecc_plot.png)
 
