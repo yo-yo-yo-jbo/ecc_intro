@@ -143,3 +143,21 @@ def scalar_mult(P, n):
 ```
 
 This implementation does scalation multiplication in a constant time (assuming `double_point` and general point addition do not reveal information about the points involved).
+
+### CVE-2020-0601 ("CurveBall")
+Back in 2020, a new vulnerability was reported (interestingly by the NSA) - it got the CVE assignment of [CVE-2020-0601](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2020-0601) and was later nicknamed "CurveBall" due to its relation to Elliptic Curves.  
+Apparently, the Windows CryptoAPI supported digital signatures based on `ECC` that could come in two different forms: either a well-known [named curve](https://learn.microsoft.com/en-us/windows/win32/seccng/cng-named-elliptic-curves), or - *by supplying the curve parameters*.  
+As I warned earlier in this blogpost, you cannot just choose any Domain Parameters and "hope for the best", and that is exactly what happened!  
+The practical scenario affected public keys in certificates, as well as file's digital signatures, and in fact - an attacker could completely control:
+- The finite field (the `p` in `mod p`)
+- The curve itself (the `a` and `b` parameters in the Weierstrass form)
+- The base point `P` on the curve
+- The order of the base point
+- Another parameter called *cofactor* which represents the ratio between the Group order and the finite field size
+
+Let's assume a public key that Windows trusts - it's a point `Q` which is expected to be `Q=nP`.  
+However, since the attacker controls the base point `P`, they could, for instance, set `P` as `Q` and know the private key - `n=1`!  
+That vulnerability had a deep impact on Microsoft and the world in general, but was easy to spot when examining TLS traffic or certificate files on disk.  
+What an impactful vulnerability!
+
+### The case of Dual_EC_DRBG
