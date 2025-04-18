@@ -3,7 +3,7 @@ This blogpost is going to be an introduction-level post about [Eliptic Curve Cry
 It assumes knowledge in modular arithmetic as well as basic Group theory knowledge, both of which I have blogged about [in the past](https://github.com/yo-yo-yo-jbo/crypto_modular/).  
 I will also be referring several times to my [Diffie-Hellman key exchange blogpost](https://github.com/yo-yo-yo-jbo/dh_key_exchange/).
 
-## What is an Elliptic Curve?
+## What is an Elliptic Curve and its use in cryptography
 At the heart of Elliptic Curve Cryptography lies a fascinating mathematical object: the elliptic curve. Unlike what the name might suggest, elliptic curves have nothing to do with ellipses. Instead, they're defined by a specific type of cubic equation and possess elegant algebraic properties that make them perfect for cryptography.  
 One great thing about `ECC` is its small key size requirements - a `256` bit key on an Elliptic Curve is as good as a `4096` RSA private key.
 
@@ -65,9 +65,9 @@ What different does it make?
 First of all, the number of points is finite, but most importantly - addition is done `mod p`, and therefore looks unpredictable, just like raising a number to large powers `mod p` looked unpredictable in Diffie-Hellman.  
 Let's continue discussing the addition of a point to itself - we have defined `P+P`, and we can do that over and over and get new points.  
 Our mathematical notation will be `P+P = 2P` and generally we could get `P+P+P+...+P = nP`. We call these *coefficient multiplication* or *scalar multiplication* of a point.  
-Interestingly, that scalar multiplication is what we call a *trapdoor function* - it's relatively easy to calculate but hard to invert, and behaves very much like the [Discrete Logarithm](https://en.wikipedia.org/wiki/Discrete_logarithm) I mentioned in my [Diffie-Hellman key exchange blogpost](https://github.com/yo-yo-yo-jbo/dh_key_exchange/).  
+Interestingly, that scalar multiplication is what we call a *trapdoor function* - it's relatively easy to calculate but hard to invert, and behaves very much like the [Discrete Logarithm](https://en.wikipedia.org/wiki/Discrete_logarithm) I mentioned in my [Diffie-Hellman key exchange blogpost](https://github.com/yo-yo-yo-jbo/dh_key_exchange/). In fact, this scalar multiplication reversal problem is exactly called the *Elliptic Curve Discrete Logarithm problem*!  
 Formally, if we have a *base point* marked as `P` and a very large positive integer `n`, it's hard to get `n` from the points `P` and `nP`.  
-In a sense, you could think of the pair `(P, nP)` as a *public key* and `n` as a *private key*.
+In a sense, you could think of the pair `(P, nP)` as a *public key* and `n` as a *private key*, which, as I promised, even a `256`-bit private key is currently considered cryptographially safe (over the right parameters - more on that later).
 
 ### Elliptic Curve Diffie-Hellman
 Similarly to [Diffie-Hellman key exchange protocol](https://github.com/yo-yo-yo-jbo/dh_key_exchange/), we an define a similar protocol over the Group we have defined.  
@@ -79,3 +79,7 @@ Let's assume `Alice` and `Bob` agree on the curve, the prime `p` and a base poin
 5. Now `Alice` and `Bob` have exchanged a secret `abP` - for example, they could use the `x` coordinate of that `abP` point.
 6. Note an evesdropper is not capable of concluding `a` from `aP` or `b` from `bP`.
 
+That is the [Elliptic Curve Diffie-Hellman (ECDH)](https://en.wikipedia.org/wiki/Elliptic-curve_Diffie–Hellman) key exchange algorithm, but there are other algorithms that rely on the same scalar multiplication reversal problem, most notably is the [Elliptive Curve Digital Signature Algorithm (ECDSA)](https://en.wikipedia.org/wiki/Elliptic_Curve_Digital_Signature_Algorithm) that I might be covering some other time.
+
+## Potential attacks on Elliptic Curve Cryptography
+The summary so far might think every curve and point are good - but just like in RSA or Diffie-Hellman, choosing bad parameters can cause substantial weaknesses to the entire cipher.
