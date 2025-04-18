@@ -1,9 +1,11 @@
 # Introduction to Elliptic Curve Cryptography
 This blogpost is going to be an introduction-level post about [Eliptic Curve Cryptography (ECC)](https://en.wikipedia.org/wiki/Elliptic-curve_cryptography).  
 It assumes knowledge in modular arithmetic as well as basic Group theory knowledge, both of which I have blogged about [in the past](https://github.com/yo-yo-yo-jbo/crypto_modular/).  
+I will also be referring several times to my [Diffie-Hellman key exchange blogpost](https://github.com/yo-yo-yo-jbo/dh_key_exchange/).
 
 ## What is an Elliptic Curve?
-At the heart of elliptic curve cryptography lies a fascinating mathematical object: the elliptic curve. Unlike what the name might suggest, elliptic curves have nothing to do with ellipses. Instead, they're defined by a specific type of cubic equation and possess elegant algebraic properties that make them perfect for cryptography.
+At the heart of Elliptic Curve Cryptography lies a fascinating mathematical object: the elliptic curve. Unlike what the name might suggest, elliptic curves have nothing to do with ellipses. Instead, they're defined by a specific type of cubic equation and possess elegant algebraic properties that make them perfect for cryptography.  
+One great thing about `ECC` is its small key size requirements - a `256` bit key on an Elliptic Curve is as good as a `4096` RSA private key.
 
 ### The general equation
 Over the real numbers, an elliptic curve is typically given by the *Weierstrass equation*:
@@ -76,3 +78,4 @@ Let's assume `Alice` and `Bob` agree on the curve, the prime `p` and a base poin
 4. Similarly, `Bob` gets `Alice`'s point and multiplies it with his `b` scalar, getting `b(aP) = abP`.
 5. Now `Alice` and `Bob` have exchanged a secret `abP` - for example, they could use the `x` coordinate of that `abP` point.
 6. Note an evesdropper is not capable of concluding `a` from `aP` or `b` from `bP`.
+
