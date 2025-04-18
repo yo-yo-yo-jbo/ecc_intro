@@ -185,7 +185,7 @@ Luckily, `Dual_EC_DRBG` is not used anywhere these days (I hope!), but it's impo
 
 ## Summary
 In this blogpost, we have introduced a lot of math, cryptography and even mentioned attacks and vulnerabilities related to `ECC`.  
-There are entire books and very deep theory about Elliptic Curves, most of whih I am not familiar with, but I hope this blogpost gave a nice taste of `ECC`, its usefulness and some of its pitfalls.
+There are entire books and very deep theory about Elliptic Curves, most of which I am not familiar with, but I hope this blogpost gave a nice taste of `ECC`, its usefulness and some of its pitfalls.
 
 Stay tuned!
 
