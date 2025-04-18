@@ -132,7 +132,7 @@ def scalar_mult(P, n):
     R0 = INFINITY_POINT
     R1 = P
 
-    # Working from MSB to LSB
+    # Working from MSB to LSB, assuming 256-bit key
     for bit in range(256, -1, -1):
         if n & (1 << (bit)):    # If that bit is set
             R0 += R1
@@ -140,6 +140,8 @@ def scalar_mult(P, n):
         else:                  # If that bit if not set
             R1 += R0
             R0 = double_point(R0)
+
+    return R0
 ```
 
 This implementation does scalation multiplication in a constant time (assuming `double_point` and general point addition do not reveal information about the points involved).
